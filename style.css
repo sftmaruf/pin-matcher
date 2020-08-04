@@ -104,3 +104,12 @@ color: #E0B612;
     color: #FF3C5F;
     margin-top: 10px;
 }
+#unmatched-logger{
+    display: none;
+}
+#matched-logger{
+    display: none;
+}
+.display-center{
+    text-align: center;
+}

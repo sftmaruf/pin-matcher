@@ -6,53 +6,117 @@
     <title>Pin Generator</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <div class="pin-generator half-width">
-                    <input class="form-control" type="text">
-                    <button class="generate-btn">Generate Pin</button>
+                    <input id="display-newPin" class="form-control display-center" type="text">
+                    <button onclick="generateRandomPin()" class="generate-btn">Generate Pin</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-section half-width">
-                    <input class="form-control" type="text">
+                    <input id="display-typedPin" class="form-control display-center" type="text">
                     <div class="numbers">
                         <div class="calc-body">
                             <div class="calc-button-row">
-                              <div class="button">7</div>
-                              <div class="button">8</div>
-                              <div class="button">9</div>
+                              <div onclick="displayTypedPin(7)" class="button">7</div>
+                              <div onclick="displayTypedPin(8)" class="button">8</div>
+                              <div onclick="displayTypedPin(9)" class="button">9</div>
                             </div>
                             <div class="calc-button-row">
-                              <div class="button">4</div>
-                              <div class="button">5</div>
-                              <div class="button">6</div>
+                              <div onclick="displayTypedPin(4)" class="button">4</div>
+                              <div onclick="displayTypedPin(5)" class="button">5</div>
+                              <div onclick="displayTypedPin(6)" class="button">6</div>
                             </div>
                             <div class="calc-button-row">
-                              <div class="button">1</div>
-                              <div class="button">2</div>
-                              <div class="button">3</div>
+                              <div onclick="displayTypedPin(1)" class="button">1</div>
+                              <div onclick="displayTypedPin(2)" class="button">2</div>
+                              <div onclick="displayTypedPin(3)" class="button">3</div>
                             </div>
                             <div class="calc-button-row">
-                                <div class="button"><</div>
-                                <div class="button">0</div>
-                                <div class="button">C</div>
+                             <div onclick="deleteMechanism('<')" class="button"><</div>
+                             <div onclick="displayTypedPin(0)" class="button">0</div>
+                             <div onclick="deleteMechanism('C')" class="button">C</div>
                             </div>
                             <div>
-                                <button type="submit" class="submit-btn">Submit</button>
-                                <p class="action-left">3 try left</p>
+                                <button id="submit-Button" onclick="compareGeneratedAndTypedPin()" type="submit" class="submit-btn">Submit</button>
+                                <p id="display-counter" class="action-left"><span id="counter">3</span> try left</p>
                             </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="notify-section">
-            <p class="notify">❌ Pin Didn't Match, Please try again</p>
-            <p class="notify">✅ Pin Matched... Secret door is opening for you</p>
+            <p id="unmatched-logger" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="matched-logger" class="notify">✅ Pin Matched... Secret door is opening for you</p>
         </div>
     </div>
+
+    <script>
+        
+        //generating random pin
+        function generateRandomPin(){
+            const randomPin = Math.floor(Math.random() * 1000) + 1000;
+            document.getElementById("display-newPin").value = randomPin;
+        }
+
+        //display typed pin
+        function displayTypedPin(tempValue){
+            tempPin = document.getElementById("display-typedPin").value + tempValue;
+            document.getElementById("display-typedPin").value = tempPin;
+        }
+
+        //comparing generated pin with typed pin
+        var count = 3;
+        function compareGeneratedAndTypedPin(){
+
+            if(count == 0){
+                document.getElementById("submit-Button").disabled = true;
+                document.getElementById("display-counter").innerText = "Best luck next time";
+            }
+
+            const generatedPin = document.getElementById("display-newPin").value;
+            const typedPin = document.getElementById("display-typedPin").value;
+
+            if(generatedPin == typedPin && generatedPin != 0){
+                document.getElementById("matched-logger").style.display = 'block';
+                document.getElementById("unmatched-logger").style.display = 'none';
+            }else{
+                document.getElementById("unmatched-logger").style.display = 'block';
+                document.getElementById("matched-logger").style.display = 'none';
+                count--;
+                document.getElementById("counter").innerText = count;
+            }
+
+        }
+
+        //deleting like backspace and delete all
+        function deleteMechanism(buttonSelector){
+
+            if(buttonSelector == '<'){
+                let pinArray = [];
+                var pin = document.getElementById("display-typedPin").value;
+                pin = pin.toString();
+                
+                for(var i = 0; i < pin.length; i++){
+                    pinArray.push(pin[i]);
+                }
+
+                if(pinArray.length > 0){
+                    pinArray.pop();
+                    document.getElementById("display-typedPin").value = pinArray.join("");
+                }
+            }else if(buttonSelector == 'C'){
+                document.getElementById("display-typedPin").value = "";
+            }
+      
+        }
+   
+    </script>
+
 </body>
 </html>
